@@ -1,0 +1,84 @@
+29/5 
+Construye tu primer CRUD con Spring Boot, Angular y MySQL - Yeison Eduardi Molano Lopez
+
+Inicializamos el proyecto con Spring Initialzr
+Dependencias: Spring Boot DevTools, Lombok, MySQL driver, Spring Web, Spring Data JPA
+
+Dentro de de la aplicacion agregamos:
+model: lugar donde vamos poner las clases y todos lo objetos
+repository: aca va a estar todo lo de JPA(conexion entre spring y mysql)
+service:
+controller: encargado de recibir y inviar las peticiones hacia el navegador
+
+Dentro de la carpeta model agregamos la clase Persona
+Se le agrega @Entity para definir que va a ser una tabla dentro de la base de datos
+Esto tambien requiere una clave primaria que va a ser el nroDocumento
+Tambien le agregamos nombre apellido y correo electronico
+Estas variables van a ser columnas en la base de datos, entonces le agregamos @Column
+
+Dentro de la carpeta repository agregamos la clase PersonaRepository
+Esta se extiende de la clase JpaRepository, que va a trabajar con la tabla Persona
+Eso solo necesitamos, el JpaRepository ya tiene sus metodos y con eso vamos a trabajar
+
+Dentro de la carpeta service agregamos la interfaz PersonaService para comunicar el 
+controlador con la tabla
+Aca agregamos el metodo newPerson(create) en donde recibe una persona y 
+la agrega a la base de datos
+Agregamos el metodo getAll(read) donde consulta todas las personas
+Agregamos modifyPerson(update)
+Agregamos deletePerson(remove)
+
+Dentro de la carpeta service agregamos la clase PersonaServiceImpl en donde
+implementamos todos los metodos de la PersonaService
+Primero hacemos una inyeccion del repositorio con el que vamos a trabajar(agregamos @Autowired)
+inyectamos personaRepository para trabajar
+
+Dentro del metodo newPerson llamamos a personaRepository.save y le pasamos por parametro newPerson
+Dentro del metodo getAll, personaRepository.findAll
+Dentro de deletePerson, peronaRepository.deleteById(idPersona) pero este devuleve un true, asi
+que modificamos tambien el PersonaService
+
+Dentro del modifyPerson, nos aseguramos que la persona esta en la base de datos con el
+Optional<Persona> igualandolo a personaRepository.findById(persona) pero no tenemos 
+persona.getId
+Para tener ese metodo agregamos en la clase Persona.java la etiqueta @Data de Lombok
+Con esto ya tenemos todos los getters de Persona.java y ahora si hacemos
+personaRepository.findById(persona.getNroDocumento())
+si personaEncontrada contiene algo personaEncontrada.get().setNombre(persona.getNombre()) y
+asi con todas las variables de la persona
+retornamos newPerson(personaEncontrada.get())
+
+Creamos la clase PersonaController dentro de la carpeta controller
+Le agregamos la etiqueta @RestController arriba de la clase
+Tambien le agregamos "por que url nos va a encontrar" @RequestMapping("/persona")
+Le agregamos el metodo newPersona(estos, a diferencia del service, va a tener
+conexion directa con el navegador)
+
+Tambien tenemos que hacer un inyeccion del personaService 
+para que dentro del metodo newPersona retornemos personaService.newPerson(newPersona);
+Agregamos el metodo getAll() el cual retorna un Iterable<Persona>, dentro
+de este metodo llamamos a personaService.getAll()
+Agregamos el metodo updatePerson(persona) que retorna una Persona,dentro
+de este llamamos a personaService.modifyPerson(persona)
+Agregamos el metodo deletePersona(id) que retorna un booleano, dentro
+de este llamamos al personaService.deletePerson(id)
+
+En el metodo newPersona aclaramos que es del tipo web con @PostMapping("/nuevo")
+hay que especificar tambien que esperamos algo por parametro @RequestBody
+En el metodo getAll() @GetMapping("/mostrar")
+En el metodo updatePerson() @PostMapping("/modificar"), y @RequestBody
+En el metodo deletePerson() @PostMapping(value = "/{id}"), se pone entre laves para enviarlo
+por la misma url, y lleva @RequestParam
+
+configuramos las propiedades de la conexion a la base de datos
+spring.datasource.url=jdbc:mysql://localhost:3306/persona?useSSL=dalse&serveTimezone=UTC
+spring.datasource.username=root
+spring.datasource.password=1234
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+spring.datasource.platform=org.hibernate.dialect.MySQL8Dialect
+
+spring.jpa.show-sql=true
+spring.jpa.hibernate.ddl-auto=update
+logging.level.org.hibernate.SQL=debug
+
