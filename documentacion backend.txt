@@ -30,6 +30,7 @@ Agregamos deletePerson(remove)
 
 Dentro de la carpeta service agregamos la clase PersonaServiceImpl en donde
 implementamos todos los metodos de la PersonaService
+Arriba de la clase colocamos la etiqueta @Service para que este sea reconocido como servicio
 Primero hacemos una inyeccion del repositorio con el que vamos a trabajar(agregamos @Autowired)
 inyectamos personaRepository para trabajar
 
@@ -82,3 +83,7 @@ spring.jpa.show-sql=true
 spring.jpa.hibernate.ddl-auto=update
 logging.level.org.hibernate.SQL=debug
 
+Hay un error de las dependencias, de la 25 a la 28 esta el "starter-web"
+y de la 46 a 50 esta "starter-tomcat". hay que borrar la segunda dependencia
+
+Con esto ya estariamos 
