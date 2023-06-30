@@ -1,0 +1,11 @@
+.form-persona {
+    min-width: 150px;
+    max-width: 300px;
+    width: 100%;
+    margin-left: 20px;
+    margin-bottom: 20px;
+  }
+
+  table {
+    width: 100%;
+  }

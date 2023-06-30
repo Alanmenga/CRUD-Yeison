@@ -51,6 +51,7 @@ retornamos newPerson(personaEncontrada.get())
 
 Creamos la clase PersonaController dentro de la carpeta controller
 Le agregamos la etiqueta @RestController arriba de la clase
+Agregamos la etiqueta @CrossOrigin(origins = {"http://localhost:4200","http://localhost:8080"})
 Tambien le agregamos "por que url nos va a encontrar" @RequestMapping("/persona")
 Le agregamos el metodo newPersona(estos, a diferencia del service, va a tener
 conexion directa con el navegador)
